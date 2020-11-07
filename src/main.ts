@@ -7,6 +7,7 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
+      // TODO: Don't do this - https://www.electronjs.org/docs/tutorial/security#2-do-not-enable-nodejs-integration-for-remote-content
       nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js')
     }

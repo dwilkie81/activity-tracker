@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-const e = React.createElement;
+import Button from 'react-bootstrap/Button';
 
 class LikeButton extends React.Component {
 
@@ -16,11 +15,7 @@ class LikeButton extends React.Component {
       return 'You liked this.';
     }
 
-    return e(
-      'button',
-      { onClick: () => this.setState({ liked: true }) },
-      'Like'
-    );
+    return <Button onClick={() => this.setState({ liked: true})}>Like</Button>;
   }
 }
 
