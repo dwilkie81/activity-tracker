@@ -7,12 +7,16 @@
     "build": "tsc",
     "start": "npm run build && electron ."
   },
-  "devDependencies": {
-    "typescript": "^3.4.3",
-    "electron": "^10.1.5"
-  },
   "dependencies": {
     "jquery": "^3.5.1",
     "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.56",
+    "@types/react-dom": "^16.9.9",
+    "electron": "^10.1.5",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "typescript": "^3.4.3"
   }
 }
