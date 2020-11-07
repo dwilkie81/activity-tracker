@@ -1,7 +1,12 @@
+// eslint-disable-next-line
+require('dotenv').config();
+
 import * as path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
-import fs from 'fs';
 import { TO_MAIN, FROM_MAIN } from './constants/channels';
+import db from './db';
+
+import Activity from './models/activity';
 
 let mainWindow: BrowserWindow;
 
@@ -43,18 +48,17 @@ app.on('window-all-closed', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-const filename = 'contacts';
-
-ipcMain.on(TO_MAIN, (event, payload) => {
+ipcMain.on(TO_MAIN, async (event, payload) => {
     if(payload.type === 'loadData') {
-        if(fs.existsSync(filename)) {
-            mainWindow.webContents.send(FROM_MAIN, fs.readFileSync(filename, 'utf8').split('\n'));
-        } else {
-            console.info('File Doesn\'t Exist. Creating new file.');
-            fs.writeFile(filename, '', () => undefined);
-            mainWindow.webContents.send(FROM_MAIN, '');
-        }
+        const data = await Activity.findAll();
+        const titles = data.map(d => `${d.title},email`);
+
+        mainWindow.webContents.send(FROM_MAIN, titles);
     } else if (payload.type === 'saveData') {
-        fs.appendFile('contacts', payload.name + ',' + payload.email + '\n', () => undefined);
+        await db.sync();
+        await Activity.create({
+            title: payload.name,
+            duration: 5,
+        });        
     }
 });

@@ -5,14 +5,19 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc && webpack",
+    "db:down": "npx sequelize-cli db:migrate:undo",
+    "db:up": "npx sequelize-cli db:migrate",
     "lint": "npx eslint src/",
     "lint:fix": "npx eslint --fix src/",
-    "start": "npm run build && electron ."
+    "start": "npm run build && npm run db:up && electron ."
   },
   "dependencies": {
+    "@types/validator": "^13.1.0",
     "bootstrap": "^4.5.3",
+    "dotenv": "^8.2.0",
     "jquery": "^3.5.1",
     "react-bootstrap": "^1.4.0",
+    "sequelize": "^6.3.5",
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
@@ -25,6 +30,7 @@
     "eslint-plugin-react": "^7.21.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "sequelize-cli": "^6.2.0",
     "typescript": "^3.4.3",
     "webpack": "^5.4.0",
     "webpack-cli": "^4.2.0"
