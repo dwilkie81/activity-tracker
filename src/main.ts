@@ -1,14 +1,17 @@
 import * as path from 'path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import fs from 'fs';
+import { TO_MAIN, FROM_MAIN } from './constants/channels';
+
+let mainWindow: BrowserWindow;
 
 function createWindow () {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      // TODO: Don't do this - https://www.electronjs.org/docs/tutorial/security#2-do-not-enable-nodejs-integration-for-remote-content
-      nodeIntegration: true,
+      contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
   })
@@ -39,3 +42,19 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+let filename = 'contacts'
+
+ipcMain.on(TO_MAIN, (event, payload) => {
+  if(payload.type === 'loadData') {
+    if(fs.existsSync(filename)) {
+      mainWindow.webContents.send(FROM_MAIN, fs.readFileSync(filename, 'utf8').split('\n'));
+    } else {
+      console.info("File Doesn\'t Exist. Creating new file.")
+      fs.writeFile(filename, '', () => undefined);
+      mainWindow.webContents.send(FROM_MAIN, '');
+    }
+  } else if (payload.type === 'saveData') {
+       fs.appendFile('contacts', payload.name + ',' + payload.email + '\n', () => undefined)
+  }
+});

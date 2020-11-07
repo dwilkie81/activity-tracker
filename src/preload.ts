@@ -1,3 +1,6 @@
+import { contextBridge, ipcRenderer } from 'electron';
+import { TO_MAIN, FROM_MAIN } from './constants/channels';
+
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 window.addEventListener('DOMContentLoaded', () => {
@@ -10,3 +13,24 @@ window.addEventListener('DOMContentLoaded', () => {
     replaceText(`${type}-version`, process.versions[type as keyof NodeJS.ProcessVersions])
   }
 })
+
+// Expose protected methods that allow the renderer process to use
+// the ipcRenderer without exposing the entire object
+contextBridge.exposeInMainWorld(
+  "api", {
+      send: (channel: string, data: unknown) => {
+          // whitelist channels
+          let validChannels = [TO_MAIN];
+          if (validChannels.includes(channel)) {
+              ipcRenderer.send(channel, data);
+          }
+      },
+      receive: (channel: string, func: Function) => {
+          let validChannels = [FROM_MAIN];
+          if (validChannels.includes(channel)) {
+              // Deliberately strip event as it includes `sender` 
+              ipcRenderer.on(channel, (event, ...args) => func(...args));
+          }
+      }
+  }
+);
