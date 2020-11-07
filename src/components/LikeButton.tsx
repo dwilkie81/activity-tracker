@@ -3,19 +3,19 @@ import Button from 'react-bootstrap/Button';
 
 class LikeButton extends React.Component {
 
-  state: any = null;
+  state: { liked: boolean };
 
-  constructor(props: {}) {
-    super(props);
-    this.state = { liked: false };
+  constructor() {
+      super({});
+      this.state = { liked: false };
   }
 
-  render() {
-    if (this.state.liked) {
-      return 'You liked this.';
-    }
+  render(): React.ReactNode {
+      if (this.state.liked) {
+          return 'You liked this.';
+      }
 
-    return <Button onClick={() => this.setState({ liked: true})}>Like</Button>;
+      return <Button onClick={() => this.setState({ liked: true})}>Like</Button>;
   }
 }
 
