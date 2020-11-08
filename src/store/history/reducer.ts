@@ -1,17 +1,24 @@
 import { AnyAction } from 'redux';
+import { Activity } from '../../types/Activity';
+import { LOAD_HISTORY_ACTION } from './actions';
 
-interface HistoryState {
-    value: number,
+export interface HistoryState {
+    history: Activity[],
 }
 
-const reducer = (state: HistoryState = { value: 0 }, action: AnyAction): HistoryState => {
+const defaultState = {
+    history: [{id: 4, title: 'My Activity', duration: 100}],
+};
+
+const reducer = (state: HistoryState = defaultState, action: AnyAction): HistoryState => {
     switch (action.type) {
-    case 'counter/incremented':
-        return { value: state.value + 1 };
-    case 'counter/decremented':
-        return { value: state.value - 1 };
-    default:
-        return state;
+        case LOAD_HISTORY_ACTION:
+            return {
+                ...state,
+                history: action.data,
+            };
+        default:
+            return state;
     }
 };
 

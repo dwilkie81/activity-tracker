@@ -1,14 +1,14 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
+import Table from 'react-bootstrap/Table';
+import { useSelector } from 'react-redux';
+import { getHistory } from '../../store/history/selectors';
 import { fetchHistory } from '../../ipc/history/sender';
-import { Activity } from '../../types/Activity';
 
 const History: React.FC = () => {
-    const [ history, setHistory ] = React.useState<Activity[]>([]);
+    const history = useSelector(getHistory);
 
     React.useEffect(() => {
         fetchHistory();
-        setHistory([{id: 4, title: 'My Activity', duration: 100}]);
     }, []);
 
     return (

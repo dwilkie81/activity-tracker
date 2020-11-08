@@ -3,3 +3,5 @@ export interface Activity {
     title: string;
     duration: number;
 }
+
+export type NewActivity = Omit<Activity, 'id'>;
