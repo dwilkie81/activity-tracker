@@ -1,11 +1,13 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
+import { fetchHistory } from '../../ipc/history/sender';
 import { Activity } from '../../types/Activity';
 
 const History: React.FC = () => {
     const [ history, setHistory ] = React.useState<Activity[]>([]);
 
     React.useEffect(() => {
+        fetchHistory();
         setHistory([{id: 4, title: 'My Activity', duration: 100}]);
     }, []);
 
