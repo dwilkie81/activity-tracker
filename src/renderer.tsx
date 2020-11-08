@@ -1,13 +1,16 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import LikeButton from './components/LikeButton';
+import { App } from './components/App';
 import { TO_MAIN, FROM_MAIN } from './constants/channels';
 import { CustomWindow } from './types/Window';
 
 declare let window: CustomWindow;
 
-const domContainer = document.querySelector('#like_button_container');
-ReactDOM.render(<LikeButton />, domContainer);
+const domContainer = document.querySelector('#app');
+ReactDOM.render(<App />, domContainer);
+
+
+
 
 // TODO: Remove jquery when this PoC is removed
 // eslint-disable-next-line @typescript-eslint/no-var-requires
