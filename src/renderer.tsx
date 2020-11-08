@@ -1,7 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { App } from './components/App';
-import { TO_MAIN, FROM_MAIN } from './constants/channels';
+import { TO_MAIN } from './constants/channels';
+import { fetchHistory } from './ipc/history/sender';
+import { configureReceivers } from './ipc/receiver';
 import { CustomWindow } from './types/Window';
 
 declare let window: CustomWindow;
@@ -35,11 +37,5 @@ function addEntry(name: string, email: string) {
     }
 }
 
-window.api.receive(FROM_MAIN, (data: string[]) => {
-    data.forEach((contact) => {
-        const [ name, email ] = contact.split(',');
-        addEntry(name, email);
-    });
-});
-
-window.api.send(TO_MAIN, {type: 'loadData'});
+configureReceivers();
+fetchHistory();

@@ -21,7 +21,7 @@ const History: React.FC = () => {
             <tbody>
                 {history.map(({id, title, duration}) => {
                     return (
-                        <tr>
+                        <tr key={id}>
                             <td>{id}</td>
                             <td>{title}</td>
                             <td>{duration}</td>
@@ -31,6 +31,6 @@ const History: React.FC = () => {
             </tbody>
         </Table>        
     );
-}
+};
 
 export default History;

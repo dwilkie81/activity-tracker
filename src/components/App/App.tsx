@@ -20,7 +20,7 @@ const App: React.FC = () => {
                     </Tabs>
                 </Col>
             </Row>
-      </Container>
+        </Container>
     );
 };
 

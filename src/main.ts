@@ -2,11 +2,8 @@
 require('dotenv').config();
 
 import * as path from 'path';
-import { app, BrowserWindow, ipcMain } from 'electron';
-import { TO_MAIN, FROM_MAIN } from './constants/channels';
-import db from './db';
-
-import Activity from './models/activity';
+import { app, BrowserWindow } from 'electron';
+import { configureHandlers } from './ipc/handler';
 
 let mainWindow: BrowserWindow;
 
@@ -23,6 +20,7 @@ function createWindow () {
 
     // and load the index.html of the app.
     mainWindow.loadFile('index.html');
+    configureHandlers(mainWindow);
 }
 
 // This method will be called when Electron has finished
@@ -43,22 +41,4 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit();
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-
-ipcMain.on(TO_MAIN, async (event, payload) => {
-    if(payload.type === 'loadData') {
-        const data = await Activity.findAll();
-        const titles = data.map(d => `${d.title},email`);
-
-        mainWindow.webContents.send(FROM_MAIN, titles);
-    } else if (payload.type === 'saveData') {
-        await db.sync();
-        await Activity.create({
-            title: payload.name,
-            duration: 5,
-        });        
-    }
 });
